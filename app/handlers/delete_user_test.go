@@ -6,14 +6,14 @@ import (
 	"testing"
 
 	"github.com/gorilla/mux"
-	"github.com/jhonatanlteodoro/verify_test/app/db"
 	"github.com/jhonatanlteodoro/verify_test/app/models"
+	"github.com/jhonatanlteodoro/verify_test/app/sqlite_connector"
 )
 
 func TestBasicBehaviorOfDeleteUserHandler(t *testing.T) {
 	wait := 1
 	retry := 0
-	db, err := db.GetConnection(wait, retry)
+	db, err := sqlite_connector.GetConnection(wait, retry)
 	if err != nil {
 		t.Error("fail connecting database")
 	}

@@ -1,4 +1,4 @@
-package db
+package sqlite_connector
 
 import (
 	"log"
