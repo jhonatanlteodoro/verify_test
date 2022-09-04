@@ -1,6 +1,7 @@
 package models
 
 import (
+	"github.com/jhonatanlteodoro/verify_test/app/hashing"
 	"gorm.io/gorm"
 )
 
@@ -19,4 +20,14 @@ type APIResponseUser struct {
 	Age     string `json:"age"`
 	Email   string `json:"email"`
 	Address string `json:"address"`
+}
+
+func (u *User) SetHashPassword() error {
+	hPass, err := hashing.HashFromPassword(u.Password)
+	if err != nil {
+		return err
+	}
+
+	u.Password = string(hPass)
+	return nil
 }

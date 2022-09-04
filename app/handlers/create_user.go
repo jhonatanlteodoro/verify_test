@@ -19,7 +19,7 @@ func CreateUser(db *gorm.DB) http.HandlerFunc {
 			respondWithError(w, http.StatusInternalServerError, "Error")
 			return
 		}
-
+		user.SetHashPassword()
 		db.Create(&user)
 
 		response := map[string]interface{}{
