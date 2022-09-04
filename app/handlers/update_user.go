@@ -28,11 +28,7 @@ func UpdateUser(db *gorm.DB) http.HandlerFunc {
 		defer r.Body.Close()
 
 		user.ID = uint(id)
-		tx := db.Model(&user).Updates(&user)
-		if !tx.Statement.Changed() {
-			respondUserNotFound(w)
-			return
-		}
+		db.Model(&user).Updates(&user)
 
 		resp := map[string]string{
 			"status": "ok",

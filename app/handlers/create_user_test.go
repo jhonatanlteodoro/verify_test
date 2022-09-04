@@ -1,24 +1,38 @@
 package handlers
 
 import (
+	"bytes"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 
 	"github.com/gorilla/mux"
+	"github.com/jhonatanlteodoro/verify_test/app/db"
+	"github.com/jhonatanlteodoro/verify_test/app/models"
 )
 
 func TestBasicBehaviorOfCreateUserHandler(t *testing.T) {
-
-	request, err := http.NewRequest(http.MethodPost, "/users/", nil)
+	wait := 1
+	retry := 0
+	db, err := db.GetConnection(wait, retry)
 	if err != nil {
-		t.Error(err)
+		t.Error("fail connecting database")
 	}
+	models.RunMigrations(db)
+
+	data := "{\"name\": \"test\", \"password\": \"some password\"}"
+	bData := bytes.NewBuffer([]byte(data))
+
+	request, request_err := http.NewRequest(http.MethodPost, "/users/", bData)
+	if request_err != nil {
+		t.Error(request_err)
+	}
+	request.Header.Set("Content-type", "application/json")
 
 	responseRecorder := httptest.NewRecorder()
 	router := mux.NewRouter()
 
-	router.HandleFunc("/users/", CreateUser)
+	router.HandleFunc("/users/", CreateUser(db))
 	router.ServeHTTP(responseRecorder, request)
 
 	if responseRecorder.Code != http.StatusOK {

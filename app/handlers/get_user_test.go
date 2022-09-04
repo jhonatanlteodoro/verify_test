@@ -6,19 +6,28 @@ import (
 	"testing"
 
 	"github.com/gorilla/mux"
+	"github.com/jhonatanlteodoro/verify_test/app/db"
+	"github.com/jhonatanlteodoro/verify_test/app/models"
 )
 
 func TestBasicBehaviorOfGetUserByIdHandler(t *testing.T) {
-
-	request, err := http.NewRequest(http.MethodGet, "/users/1", nil)
+	wait := 1
+	retry := 0
+	db, err := db.GetConnection(wait, retry)
 	if err != nil {
-		t.Error(err)
+		t.Error("fail connecting database")
+	}
+	models.RunMigrations(db)
+
+	request, request_err := http.NewRequest(http.MethodGet, "/users/1", nil)
+	if request_err != nil {
+		t.Error(request_err)
 	}
 
 	responseRecorder := httptest.NewRecorder()
 	router := mux.NewRouter()
 
-	router.HandleFunc("/users/{id}", GetUserById)
+	router.HandleFunc("/users/{id}", GetUserById(db))
 	router.ServeHTTP(responseRecorder, request)
 
 	if responseRecorder.Code != http.StatusOK {
@@ -32,16 +41,23 @@ func TestBasicBehaviorOfGetUserByIdHandler(t *testing.T) {
 }
 
 func TestBasicBehaviorOfGetAllHandler(t *testing.T) {
-
-	request, err := http.NewRequest(http.MethodGet, "/users/", nil)
+	wait := 1
+	retry := 0
+	db, err := db.GetConnection(wait, retry)
 	if err != nil {
-		t.Error(err)
+		t.Error("fail connecting database")
+	}
+	models.RunMigrations(db)
+
+	request, request_err := http.NewRequest(http.MethodGet, "/users/", nil)
+	if request_err != nil {
+		t.Error(request_err)
 	}
 
 	responseRecorder := httptest.NewRecorder()
 	router := mux.NewRouter()
 
-	router.HandleFunc("/users/", GetAll)
+	router.HandleFunc("/users/", GetAll(db))
 	router.ServeHTTP(responseRecorder, request)
 
 	if responseRecorder.Code != http.StatusOK {
