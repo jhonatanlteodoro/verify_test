@@ -8,7 +8,7 @@ import (
 type User struct {
 	gorm.Model
 	Name     string
-	Age      string
+	Age      int
 	Email    string
 	Password string
 	Address  string
@@ -17,7 +17,7 @@ type User struct {
 type APIResponseUser struct {
 	ID      int    `json:"id"`
 	Name    string `json:"name"`
-	Age     string `json:"age"`
+	Age     int    `json:"age"`
 	Email   string `json:"email"`
 	Address string `json:"address"`
 }
