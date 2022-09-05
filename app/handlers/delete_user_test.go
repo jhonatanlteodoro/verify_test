@@ -13,7 +13,7 @@ import (
 func TestBasicBehaviorOfDeleteUserHandler(t *testing.T) {
 	wait := 1
 	retry := 0
-	db, err := sqlite_connector.GetConnection(wait, retry)
+	db, err := sqlite_connector.GetConnection("test-local.sqlite", wait, retry)
 	if err != nil {
 		t.Error("fail connecting database")
 	}
