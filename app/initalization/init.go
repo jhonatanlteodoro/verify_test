@@ -116,7 +116,9 @@ func (a *App) Initilize() {
 }
 
 func (a *App) Run(host string, port string) {
+	runningAt := fmt.Sprintf("%s:%s", host, port)
+	log.Printf("Running server... %s", runningAt)
 	log.Fatal(
-		http.ListenAndServe(fmt.Sprintf("%s:%s", host, port), a.Router),
+		http.ListenAndServe(runningAt, a.Router),
 	)
 }
